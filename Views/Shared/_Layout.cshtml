@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>File Uploader</title>
+
+    <!-- Google web fonts -->
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel="stylesheet">
+
+    <!-- The main CSS file -->
+    <link href="~/Content/upload/assets/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    @RenderBody()
+
+    <footer style="visibility:none;">
+        <h2><a href="" id="download-link"><i id="link-address">Download link</i></a></h2>
+    </footer>
+
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)*@
+
+
+    <!-- JavaScript Includes -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="~/Content/upload/assets/js/jquery.knob.js"></script>
+    <script src="~/Content/upload/assets/js/jquery.ui.widget.js"></script>
+    <script src="~/Content/upload/assets/js/jquery.iframe-transport.js"></script>
+    <script src="~/Content/upload/assets/js/jquery.fileupload.js"></script>
+
+    <!-- Our main JS file -->
+    <script src="~/Content/upload/assets/js/script.js"></script>
+</body>
+</html>
+
+
