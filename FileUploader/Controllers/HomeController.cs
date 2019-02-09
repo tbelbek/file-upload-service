@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 
 namespace FileUploader.Controllers
@@ -29,6 +28,8 @@ namespace FileUploader.Controllers
             bool isSavedSuccessfully = false;
 
             var foldername = $"/UploadedFiles/FileSequence-{Guid.NewGuid().ToString()}/";
+
+            DeleteOldFiles();
 
             Directory.CreateDirectory(foldername);
 
@@ -67,6 +68,32 @@ namespace FileUploader.Controllers
             return Json(baseUrl);
         }
 
+        private static void DeleteOldFiles()
+        {
+            System.IO.DirectoryInfo di = new DirectoryInfo("/UploadedFiles/");
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                if (file.CreationTime < DateTime.Now.AddMonths(-3))
+                {
+                    file.Delete();
+                }
+            }
+
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+
+                foreach (FileInfo file in dir.GetFiles())
+                {
+                    if (file.CreationTime < DateTime.Now.AddMonths(-3))
+                    {
+                        file.Delete();
+                    }
+                }
+
+                dir.Delete(true);
+            }
+        }
 
         public FileResult GetFile(string fileId)
         {
