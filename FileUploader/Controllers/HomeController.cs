@@ -63,8 +63,7 @@ namespace FileUploader.Controllers
             var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now };
             DbContext.Files.Add(dbObject);
             DbContext.SaveChanges();
-            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}/Home/GetFile?fileId={dbObject.HashVal}";
-
+            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{dbObject.HashVal}";
             return Json(baseUrl);
         }
 

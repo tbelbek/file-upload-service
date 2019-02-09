@@ -6,7 +6,8 @@
 
     <!-- Google web fonts -->
     <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel="stylesheet">
-
+    <link href="~/Content/tooltipster/css/tooltipster.bundle.min.css" rel="stylesheet" />
+    <link href="~/Content/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-borderless.min.css" rel="stylesheet" />
     <!-- The main CSS file -->
     <link href="~/Content/upload/assets/css/style.css" rel="stylesheet" />
 </head>
@@ -14,14 +15,19 @@
 <body>
 
     @RenderBody()
+    <div style="display:none;">
+        <div id="tooltip_content">
+            <h2>Senin indirme hazır beybisi</h2>
+        </div>
+    </div>
 
     <footer style="visibility:none;">
-        <h2><a href="" id="download-link"><i id="link-address">Download link</i></a></h2>
+        <h2><a class="tooltip" title="Senin indirme hazır beybisi" href="" id="download-link"><i id="link-address">Download link</i></a></h2>
     </footer>
 
     @*@Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)*@
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
 
 
     <!-- JavaScript Includes -->
@@ -30,7 +36,7 @@
     <script src="~/Content/upload/assets/js/jquery.ui.widget.js"></script>
     <script src="~/Content/upload/assets/js/jquery.iframe-transport.js"></script>
     <script src="~/Content/upload/assets/js/jquery.fileupload.js"></script>
-
+    <script src="~/Content/tooltipster/js/tooltipster.bundle.js"></script>
     <!-- Our main JS file -->
     <script src="~/Content/upload/assets/js/script.js"></script>
 </body>

@@ -170,6 +170,21 @@
     <Content Include="Content\dropzonejs\min\dropzone.min.css" />
     <Content Include="Content\dropzonejs\min\dropzone.min.js" />
     <Content Include="Content\index.css" />
+    <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-borderless.min.css" />
+    <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-light.min.css" />
+    <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-noir.min.css" />
+    <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-punk.min.css" />
+    <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-shadow.min.css" />
+    <Content Include="Content\tooltipster\css\tooltipster.bundle.css" />
+    <Content Include="Content\tooltipster\css\tooltipster.bundle.min.css" />
+    <Content Include="Content\tooltipster\css\tooltipster.main.css" />
+    <Content Include="Content\tooltipster\css\tooltipster.main.min.css" />
+    <Content Include="Content\tooltipster\js\plugins\tooltipster\SVG\tooltipster-SVG.js" />
+    <Content Include="Content\tooltipster\js\plugins\tooltipster\SVG\tooltipster-SVG.min.js" />
+    <Content Include="Content\tooltipster\js\tooltipster.bundle.js" />
+    <Content Include="Content\tooltipster\js\tooltipster.bundle.min.js" />
+    <Content Include="Content\tooltipster\js\tooltipster.main.js" />
+    <Content Include="Content\tooltipster\js\tooltipster.main.min.js" />
     <Content Include="Content\upload\assets\css\style.css" />
     <Content Include="Content\upload\assets\img\border-image.png" />
     <Content Include="Content\upload\assets\img\icons.png" />
@@ -187,6 +202,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\dropzonejs\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\Publish.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\dropzone.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -251,7 +267,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54859</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54859/</IISUrl>
+          <IISUrl>http://localhost:54859/FileUploader</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

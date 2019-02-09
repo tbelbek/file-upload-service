@@ -5,9 +5,7 @@ namespace FileUploader.Database
 {
     public class FileUploaderContext : DbContext
     {
-        public FileUploaderContext() : base("name=DefaultConnection")
-        {
-        }
+
         public virtual DbSet<Files> Files { get; set; }
     }
 

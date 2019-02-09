@@ -1,6 +1,13 @@
 $(function () {
     $("footer").hide();
+    
     var ul = $('#upload ul');
+
+    $('.tooltip').tooltipster({
+        content: $('#tooltip_content'),
+        contentCloning: false,
+        theme: ['tooltipster-borderless']
+    });
 
     $('#drop a').click(function () {
         // Simulate a click on the file input button
@@ -19,7 +26,7 @@ $(function () {
         add: function (e, data) {
 
             var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"' +
-                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span><i class="fa fa-circle-o-notch fa-spin fa-white" style="font-size:24px"></i></span></li>');
 
             // Append the file name and file size
             tpl.find('p').text(data.files[0].name)
@@ -68,13 +75,19 @@ $(function () {
         },
 
         done: function (e, data) {
-            $("#download-link").attr("href",data.result);
+            $("#download-link").attr("href", data.result);
             $("#link-address").html(data.result)
             $("footer").show();
+            $("footer").css("background-color", "#055600");
+            $('.tooltip').tooltipster('open');
+            setTimeout(function () { $("footer").css("background-color", "#080808"); }, 3000);
         }
 
     });
 
+    $("footer").mouseover(function () {
+        $('.tooltip').tooltipster('close');
+    });
 
     // Prevent the default action when a file is dropped on the window
     $(document).on('drop dragover', function (e) {
