@@ -171,6 +171,7 @@
     <Content Include="Content\dropzonejs\min\dropzone-amd-module.min.js" />
     <Content Include="Content\dropzonejs\min\dropzone.min.css" />
     <Content Include="Content\dropzonejs\min\dropzone.min.js" />
+    <Content Include="Content\favicon.ico" />
     <Content Include="Content\index.css" />
     <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-borderless.min.css" />
     <Content Include="Content\tooltipster\css\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-light.min.css" />
