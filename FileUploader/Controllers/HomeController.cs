@@ -102,7 +102,7 @@ namespace FileUploader.Controllers
         public FileResult GetFile(string fileId)
         {
             var fileUrlId = Bijective.Decode(fileId, AlphabetTest.Base16);
-            var obj = DbContext.Files.FirstOrDefault(t => t.HashVal == fileUrlId.ToString());
+            var obj = DbContext.Files.FirstOrDefault(t => t.HashVal.EndsWith(fileUrlId.ToString()));
             var bytes = GetFileData(obj.FilePath);
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(obj.FilePath));
         }
