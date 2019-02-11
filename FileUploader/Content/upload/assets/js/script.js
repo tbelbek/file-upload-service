@@ -1,12 +1,17 @@
 $(function () {
     $("footer").hide();
-    
+
     var ul = $('#upload ul');
 
     $('.tooltip').tooltipster({
         content: $('#tooltip_content'),
-        contentCloning: false,
-        theme: ['tooltipster-borderless']
+        contentCloning: true,
+        theme: ['tooltipster-borderless'],
+        functionPosition: function (instance, helper, position) {
+            position.coord.top += -40;
+            position.coord.left += -200;
+            return position;
+        }
     });
 
     $('#drop a').click(function () {
@@ -75,17 +80,19 @@ $(function () {
         },
 
         done: function (e, data) {
-            $("#download-link").attr("href", data.result);
-            $("#link-address").html(data.result)
+            $(".qrcode_content").attr("src", data.result.QrCode);
+            $("#download-link").attr("href", data.result.Url);
+            $("#link-address").html(data.result.Url);
             $("footer").show();
-            $("footer").css("background-color", "#055600");
+            $("footer").css("background-color", "#003C00");
+            $('.tooltip').tooltipster('content', $('#tooltip_content'));
             $('.tooltip').tooltipster('open');
-            setTimeout(function () { $("footer").css("background-color", "#080808"); }, 3000);
+            setTimeout(function () { $("footer").css("background-color", "#373a3d"); }, 3000);
         }
 
     });
 
-    $("footer").mouseover(function () {
+    $("footer").click(function () {
         $('.tooltip').tooltipster('close');
     });
 

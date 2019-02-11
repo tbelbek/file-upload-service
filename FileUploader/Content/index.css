@@ -245,3 +245,12 @@ footer {
         float: left;
         margin-top: 11px;
     }
+
+
+.tooltipster-content, .tooltipster-box {
+    background-color: #373a3d !important;
+}
+
+.tooltipster-arrow-border {
+    border-top-color: #373a3d !important;
+}

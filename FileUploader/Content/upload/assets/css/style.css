@@ -167,10 +167,10 @@ section, footer, header, aside {
 
 
 footer {
-    background-color: #080808;
+    background-color: #373a3d;
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0,0,0,0.4);
-    height: 40px;
+    height: 100px;
     left: 0;
     position: fixed;
     width: 100%;
@@ -203,6 +203,7 @@ footer {
             font-style: normal;
             color: #fff;
             font-size: 50px;
+            font-family: 'PT Sans Narrow', sans-serif;
         }
 
 #tzine-download {
@@ -246,3 +247,12 @@ footer {
         float: left;
         margin-top: 11px;
     }
+
+.tooltip_templates {
+    display: none;
+}
+
+.qrcode_content {
+    width: 250px;
+    height: 260px;
+}

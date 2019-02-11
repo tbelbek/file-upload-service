@@ -2,6 +2,7 @@
 using FileUploader.Helper;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using QRCoder;
 using System;
 using System.IO;
 using System.Linq;
@@ -69,7 +70,11 @@ namespace FileUploader.Controllers
             DbContext.SaveChanges();
             var fileUrlId = Bijective.Encode(Convert.ToInt32(dbObject.HashVal), AlphabetTest.Base16);
             string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{fileUrlId}";
-            return Json(baseUrl);
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(baseUrl, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+            return Json(new { Url = baseUrl, QrCode = $"data:image/png;base64, {Convert.ToBase64String(qrCodeAsPngByteArr)}" });
         }
 
         private static void DeleteOldFiles()
