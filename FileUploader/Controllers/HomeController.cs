@@ -55,7 +55,7 @@ namespace FileUploader.Controllers
             // This setting will strip the leading part of the folder path in the entries, to
             // make the entries relative to the starting folder.
             // To include the full path for each entry up to the drive root, assign folderOffset = 0.
-            int folderOffset = foldername.Length + (foldername.EndsWith("\\") ? 0 : 1);
+            int folderOffset = foldername.Length + (foldername.EndsWith("/") ? 0 : 1);
 
             CompressFolder(foldername, zipStream, folderOffset);
 
