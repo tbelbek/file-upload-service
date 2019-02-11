@@ -1,10 +1,12 @@
 ﻿using FileUploader.Database;
+using FileUploader.Helper;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -59,11 +61,14 @@ namespace FileUploader.Controllers
 
             zipStream.IsStreamOwner = true; // Makes the Close also Close the underlying stream
             zipStream.Close();
-            var fileHash = CalculateMD5(downloadFilePath);
+            var fileHash = Regex.Replace(CalculateMD5(downloadFilePath), "[^0-9.]", "").Substring(0, 9);
+
+            DbContext.Files.RemoveRange(DbContext.Files.Where(t => t.HashVal == fileHash));
             var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now };
             DbContext.Files.Add(dbObject);
             DbContext.SaveChanges();
-            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{dbObject.HashVal}";
+            var fileUrlId = Bijective.Encode(Convert.ToInt32(dbObject.HashVal), AlphabetTest.Base16);
+            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{fileUrlId}";
             return Json(baseUrl);
         }
 
@@ -96,7 +101,8 @@ namespace FileUploader.Controllers
 
         public FileResult GetFile(string fileId)
         {
-            var obj = DbContext.Files.FirstOrDefault(t => t.HashVal == fileId);
+            var fileUrlId = Bijective.Decode(fileId, AlphabetTest.Base16);
+            var obj = DbContext.Files.FirstOrDefault(t => t.HashVal == fileUrlId.ToString());
             var bytes = GetFileData(obj.FilePath);
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(obj.FilePath));
         }
