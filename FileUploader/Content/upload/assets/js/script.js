@@ -96,7 +96,7 @@ $(function () {
             
             $("#whatsapp-send").attr("href", "whatsapp://send?text=" + data.result.Url);
             $("#mail-send").attr("href", "mailto:?&cc=&bcc=&subject=&body=" + data.result.Url);
-            $("#link-address").html(data.result.Url);
+            $("#link-address").html(data.result.Url.replace(/(^\w+:|^)\/\//, ''));
             $("footer").show();
             $("footer").css("background-color", "#003C00");
             $('.tooltip').tooltipster('content', $('#tooltip_content'));
