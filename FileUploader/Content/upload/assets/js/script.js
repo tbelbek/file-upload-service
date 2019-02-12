@@ -1,6 +1,13 @@
 $(function () {
     $("footer").hide();
 
+    if (typeof Cookies.get('UserSession') === 'undefined') {
+        $.get("/Home/CreateSessionCookie", function (data) {
+            Cookies.set('UserSession', data);
+            console.log("Cookie set for user.");
+        });
+    }
+
     var ul = $('#upload ul');
 
     $('.tooltip').tooltipster({
@@ -23,6 +30,10 @@ $(function () {
     // Initialize the jQuery File Upload plugin
     $('#upload').fileupload({
 
+        beforeSend: function (xhr, data) {
+            var cookieData = Cookies.get('UserSession');
+            xhr.setRequestHeader('UserSessionCookie', cookieData);
+        },
         // This element will accept file drag/drop uploading
         dropZone: $('#drop'),
 
@@ -82,11 +93,15 @@ $(function () {
         done: function (e, data) {
             $(".qrcode_content").attr("src", data.result.QrCode);
             $("#download-link").attr("href", data.result.Url);
+            
+            $("#whatsapp-send").attr("href", "whatsapp://send?text=" + data.result.Url);
+            $("#mail-send").attr("href", "mailto:?&cc=&bcc=&subject=&body=" + data.result.Url);
             $("#link-address").html(data.result.Url);
             $("footer").show();
             $("footer").css("background-color", "#003C00");
             $('.tooltip').tooltipster('content', $('#tooltip_content'));
             $('.tooltip').tooltipster('open');
+
             setTimeout(function () { $("footer").css("background-color", "#373a3d"); }, 3000);
         }
 

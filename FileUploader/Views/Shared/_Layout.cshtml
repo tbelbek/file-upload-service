@@ -22,14 +22,24 @@
     </div>
 
     @RenderBody()
-    <div style="display:none;">
-        <div id="tooltip_content">
-            <h2>Senin indirme hazır beybisi</h2>
-        </div>
-    </div>
+    @*<div style="display:none;">
+            <div id="tooltip_content">
+                <h2>Senin indirme hazır beybisi</h2>
+            </div>
+        </div>*@
 
     <footer style="visibility:none;">
-        <h2><a class="tooltip" data-tooltip-content="#tooltip_content"  href="" id="download-link"><i id="link-address">Download link</i></a></h2>
+        <h2>
+            <a class="tooltip" data-tooltip-content="#tooltip_content" href="" id="download-link">
+                <i id="link-address">Download link </i>
+            </a>
+            @*<a id="whatsapp-send" href="">
+                <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a id="mail-send" href="">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>*@
+        </h2>
     </footer>
 
     @*@Scripts.Render("~/bundles/jquery")
@@ -43,6 +53,7 @@
     <script src="~/Content/upload/assets/js/jquery.ui.widget.js"></script>
     <script src="~/Content/upload/assets/js/jquery.iframe-transport.js"></script>
     <script src="~/Content/upload/assets/js/jquery.fileupload.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="~/Content/tooltipster/js/tooltipster.bundle.js"></script>
     <!-- Our main JS file -->
     <script src="~/Content/upload/assets/js/script.js"></script>

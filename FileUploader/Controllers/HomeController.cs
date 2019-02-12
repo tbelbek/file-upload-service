@@ -36,12 +36,17 @@ namespace FileUploader.Controllers
 
             Directory.CreateDirectory(foldername);
 
+            var userId = Request.Headers["UserSessionCookie"].ToString();
 
+            var fileDbName = string.Empty;
             foreach (string fileName in Request.Files)
             {
                 HttpPostedFileBase file = Request.Files[fileName];
 
                 string nameAndLocation = foldername + file.FileName;
+
+                fileDbName = file.FileName;
+
                 file.SaveAs(nameAndLocation);
 
                 isSavedSuccessfully = true;
@@ -65,15 +70,18 @@ namespace FileUploader.Controllers
             var fileHash = Regex.Replace(CalculateMD5(downloadFilePath), "[^0-9.]", "").Substring(0, 9);
 
             DbContext.Files.RemoveRange(DbContext.Files.Where(t => t.HashVal == fileHash));
-            var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now };
+            var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now, FileName = fileDbName, UserSessionId = userId };
             DbContext.Files.Add(dbObject);
             DbContext.SaveChanges();
+
             var fileUrlId = Bijective.Encode(Convert.ToInt32(dbObject.HashVal), AlphabetTest.Base16);
             string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{fileUrlId}";
+
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(baseUrl, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+
             return Json(new { Url = baseUrl, QrCode = $"data:image/png;base64, {Convert.ToBase64String(qrCodeAsPngByteArr)}" });
         }
 
@@ -109,7 +117,21 @@ namespace FileUploader.Controllers
             var fileUrlId = Bijective.Decode(fileId, AlphabetTest.Base16);
             var obj = DbContext.Files.FirstOrDefault(t => t.HashVal.EndsWith(fileUrlId.ToString()));
             var bytes = GetFileData(obj.FilePath);
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(obj.FilePath));
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(obj.FileName));
+        }
+
+        public JsonResult CreateSessionCookie()
+        {
+            return Json(CookieGenerator(), JsonRequestBehavior.AllowGet);
+        }
+
+        private string CookieGenerator()
+        {
+            Guid g = Guid.NewGuid();
+            string GuidString = Convert.ToBase64String(g.ToByteArray());
+            GuidString = GuidString.Replace("=", "");
+            GuidString = GuidString.Replace("+", "");
+            return GuidString;
         }
 
         public byte[] GetFileData(string s)
