@@ -93,7 +93,12 @@ $(function () {
         done: function (e, data) {
             $(".qrcode_content").attr("src", data.result.QrCode);
             $("#download-link").attr("href", data.result.Url);
-            
+            addthis.update('share', 'url', data.result.Url);
+            addthis.url = data.result.Url;
+            addthis.toolbox(".addthis_inline_share_toolbox");
+
+            //$(".addthis_inline_share_toolbox").attr("data-url", data.result.Url);
+
             $("#whatsapp-send").attr("href", "whatsapp://send?text=" + data.result.Url);
             $("#mail-send").attr("href", "mailto:?&cc=&bcc=&subject=&body=" + data.result.Url);
             $("#link-address").html(data.result.Url.replace(/(^\w+:|^)\/\//, ''));
