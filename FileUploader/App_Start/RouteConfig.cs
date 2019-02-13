@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace FileUploader
@@ -12,10 +10,18 @@ namespace FileUploader
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                    "FileLink",                                           // Route name
-                    "FileLink/{fileId}",                            // URL with parameters
-                    new { controller = "Home", action = "GetFile" }  // Parameter defaults
-                );
+                "FileLinkSimpler",                                           // Route name
+                "{fileId}",                            // URL with parameters
+                new { controller = "Home", action = "GetFile" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
+                "FileLink",                                           // Route name
+                "FileLink/{fileId}",                            // URL with parameters
+                new { controller = "Home", action = "GetFile" }  // Parameter defaults
+            );
+
+
 
             routes.MapRoute(
                 name: "Default",

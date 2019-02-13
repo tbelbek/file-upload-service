@@ -75,7 +75,7 @@ namespace FileUploader.Controllers
             DbContext.SaveChanges();
 
             var fileUrlId = Bijective.Encode(Convert.ToInt32(dbObject.HashVal), AlphabetTest.Base16);
-            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}FileLink/{fileUrlId}";
+            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}{fileUrlId}";
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(baseUrl, QRCodeGenerator.ECCLevel.Q);
