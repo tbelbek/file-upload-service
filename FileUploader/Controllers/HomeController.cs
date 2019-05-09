@@ -1,24 +1,29 @@
-﻿using FileUploader.Database;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Mvc;
+using FileUploader.Database;
 using FileUploader.Helper;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using QRCoder;
-using System;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Mvc;
 
 namespace FileUploader.Controllers
 {
     public class HomeController : Controller
     {
-        public FileUploaderContext DbContext { get; set; }
+        public static FileUploaderContext DbContext { get; set; }
         public HomeController()
         {
-            DbContext = new FileUploaderContext();
+            if (DbContext == null)
+            {
+                DbContext = new FileUploaderContext();
+            }
+
         }
         public ActionResult Index()
         {
