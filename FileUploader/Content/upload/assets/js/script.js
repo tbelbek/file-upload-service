@@ -94,9 +94,9 @@ $(function () {
             $(".qrcode_content").attr("src", data.result.QrCode);
             $("#download-link").attr("href", data.result.Url);
 
-            addthis.update('share', 'url', data.result.Url);
-            addthis.url = data.result.Url;
-            addthis.toolbox(".addthis_inline_share_toolbox");
+            //addthis.update('share', 'url', data.result.Url);
+            //addthis.url = data.result.Url;
+            //addthis.toolbox(".addthis_inline_share_toolbox");
 
             $("#link-address").html(data.result.Url.replace(/(^\w+:|^)\/\//, ''));
             $("footer").show();

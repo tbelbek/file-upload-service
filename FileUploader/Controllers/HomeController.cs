@@ -11,6 +11,7 @@ using FileUploader.Helper;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using QRCoder;
+using Z.EntityFramework.Plus;
 
 namespace FileUploader.Controllers
 {
@@ -74,7 +75,8 @@ namespace FileUploader.Controllers
             zipStream.Close();
             var fileHash = Regex.Replace(CalculateMD5(downloadFilePath), "[^0-9.]", "").Substring(0, 9);
 
-            DbContext.Files.RemoveRange(DbContext.Files.Where(t => t.HashVal == fileHash));
+            DbContext.Files.Where(t => t.HashVal == fileHash).Delete();
+
             var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now, FileName = fileDbName, UserSessionId = userId };
             DbContext.Files.Add(dbObject);
             DbContext.SaveChanges();
