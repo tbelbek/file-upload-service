@@ -96,7 +96,7 @@ $(function () {
 
         fail: function (e, data) {
             // Something has gone wrong!
-            data.context.addClass('error');
+            $("ul").find("input").addClass('error');
         },
 
         done: function (e, data) {
