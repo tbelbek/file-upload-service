@@ -170,8 +170,7 @@ namespace FileUploader.Controllers
 
             foreach (string filename in files)
             {
-
-                FileInfo fi = new FileInfo(filename);
+                FileInfo fi = new FileInfo(Regex.Replace(filename, @"[^\u0000-\u007F]+", "_"));
 
                 string entryName = filename.Substring(folderOffset); // Makes the name in zip based on the folder
                 entryName = ZipEntry.CleanName(entryName); // Removes drive from name and fixes slash direction

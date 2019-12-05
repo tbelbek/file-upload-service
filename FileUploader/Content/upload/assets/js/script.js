@@ -1,6 +1,7 @@
 $(function () {
     $("footer").hide();
-
+    $("#submit-div").hide();
+    
     if (typeof Cookies.get('UserSession') === 'undefined') {
         $.get("/Home/CreateSessionCookie", function (data) {
             Cookies.set('UserSession', data);
@@ -27,8 +28,11 @@ $(function () {
         $(this).parent().find('input').click();
     });
 
+    var filesList = [];
+    var paramNames = [];
+
     // Initialize the jQuery File Upload plugin
-    $('#upload').fileupload({
+    var uploader = $('#upload').fileupload({
 
         beforeSend: function (xhr, data) {
             var cookieData = Cookies.get('UserSession');
@@ -67,8 +71,13 @@ $(function () {
 
             });
 
-            // Automatically upload the file once it is added to the queue
-            var jqXHR = data.submit();
+            filesList.push(data.files[0]);
+            paramNames.push(data.files[0].name);
+
+            $("#submit-div").show();
+
+            //// Automatically upload the file once it is added to the queue
+            //var jqXHR = data.submit();
         },
 
         progress: function (e, data) {
@@ -78,10 +87,10 @@ $(function () {
 
             // Update the hidden input field and trigger a change
             // so that the jQuery knob plugin knows to update the dial
-            data.context.find('input').val(progress).change();
+            $("ul").find("input").val(progress).change();
 
             if (progress == 100) {
-                data.context.removeClass('working');
+                $("ul").find("input").removeClass('working');
             }
         },
 
@@ -104,6 +113,11 @@ $(function () {
             $('.tooltip').tooltipster('content', $('#tooltip_content'));
             $('.tooltip').tooltipster('open');
 
+            filesList = [];
+            paramNames = [];
+            $('#upload ul').html("");
+            $("#submit-div").hide();
+
             setTimeout(function () { $("footer").css("background-color", "#373a3d"); }, 3000);
         }
 
@@ -111,6 +125,11 @@ $(function () {
 
     $("footer").click(function () {
         $('.tooltip').tooltipster('close');
+    });
+
+    $("#submit").click(function (e) {
+        e.preventDefault();
+        var ret = uploader.fileupload('send', { files: filesList, paramName: paramNames });
     });
 
     // Prevent the default action when a file is dropped on the window

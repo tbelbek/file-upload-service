@@ -6,14 +6,17 @@
 @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { @id = "upload", enctype = "multipart/form-data" }))
 {
     <div id="drop">
-      Drag'n drop here
+        Drag'n drop here
 
         <a>Or click to choose</a>
         <input type="file" name="upl" multiple="">
     </div>
-    <ul>
-        <!-- The file uploads will be shown here -->
-    </ul>
+    <div id="submit-div" style="display:none;">
+        <a id="submit">Upload</a>
+        <ul>
+            <!-- The file uploads will be shown here -->
+        </ul>
+    </div>
 }
 
 
