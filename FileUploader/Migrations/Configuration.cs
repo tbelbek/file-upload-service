@@ -1,18 +1,15 @@
 namespace FileUploader.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<FileUploader.Database.FileUploaderContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Database.FileUploaderContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(FileUploader.Database.FileUploaderContext context)
+        protected override void Seed(Database.FileUploaderContext context)
         {
             //  This method will be called after migrating to the latest version.
 

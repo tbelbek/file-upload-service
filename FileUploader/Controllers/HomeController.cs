@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -31,7 +30,7 @@ namespace FileUploader.Controllers
             return View();
         }
 
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public JsonResult UploadFile()
         {
             bool isSavedSuccessfully = false;
@@ -42,18 +41,18 @@ namespace FileUploader.Controllers
 
             Directory.CreateDirectory(foldername);
 
-            var userId = Request.Headers["UserSessionCookie"].ToString();
+            var userId = Request.Headers["UserSessionCookie"];
 
             var fileDbName = string.Empty;
             foreach (string fileName in Request.Files)
             {
                 HttpPostedFileBase file = Request.Files[fileName];
 
-                string nameAndLocation = foldername + file.FileName;
+                string nameAndLocation = foldername + file?.FileName;
 
-                fileDbName = file.FileName;
+                fileDbName = file?.FileName;
 
-                file.SaveAs(nameAndLocation);
+                file?.SaveAs(nameAndLocation);
 
                 isSavedSuccessfully = true;
             }
@@ -77,12 +76,12 @@ namespace FileUploader.Controllers
 
             DbContext.Files.Where(t => t.HashVal == fileHash).Delete();
 
-            var dbObject = new Files() { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now, FileName = fileDbName, UserSessionId = userId };
+            var dbObject = new Files { FilePath = downloadFilePath, HashVal = fileHash, Id = Guid.NewGuid(), UploadDate = DateTime.Now, FileName = fileDbName, UserSessionId = userId };
             DbContext.Files.Add(dbObject);
             DbContext.SaveChanges();
 
             var fileUrlId = Bijective.Encode(Convert.ToInt32(dbObject.HashVal), AlphabetTest.Base16);
-            string baseUrl = $"{Request.Url.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}{fileUrlId}";
+            string baseUrl = $"{Request.Url?.GetLeftPart(UriPartial.Authority)}{Url.Content("~")}{fileUrlId}";
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(baseUrl, QRCodeGenerator.ECCLevel.Q);
@@ -94,7 +93,7 @@ namespace FileUploader.Controllers
 
         private static void DeleteOldFiles()
         {
-            System.IO.DirectoryInfo di = new DirectoryInfo("/UploadedFiles/");
+            DirectoryInfo di = new DirectoryInfo("/UploadedFiles/");
 
             foreach (FileInfo file in di.GetFiles())
             {
@@ -123,8 +122,8 @@ namespace FileUploader.Controllers
         {
             var fileUrlId = Bijective.Decode(fileId, AlphabetTest.Base16);
             var obj = DbContext.Files.FirstOrDefault(t => t.HashVal.EndsWith(fileUrlId.ToString()));
-            var bytes = GetFileData(obj.FilePath);
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"{Path.GetFileNameWithoutExtension(obj.FileName)}.zip");
+            var bytes = GetFileData(obj?.FilePath);
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"{Path.GetFileNameWithoutExtension(obj?.FileName)}.zip");
         }
 
         public JsonResult CreateSessionCookie()
@@ -143,11 +142,11 @@ namespace FileUploader.Controllers
 
         public byte[] GetFileData(string s)
         {
-            System.IO.FileStream fs = System.IO.File.OpenRead(s);
+            FileStream fs = System.IO.File.OpenRead(s);
             byte[] data = new byte[fs.Length];
             int br = fs.Read(data, 0, data.Length);
             if (br != fs.Length)
-                throw new System.IO.IOException(s);
+                throw new IOException(s);
             return data;
         }
 
@@ -174,8 +173,8 @@ namespace FileUploader.Controllers
 
                 string entryName = filename.Substring(folderOffset); // Makes the name in zip based on the folder
                 entryName = ZipEntry.CleanName(entryName); // Removes drive from name and fixes slash direction
-                ZipEntry newEntry = new ZipEntry(entryName);
-                newEntry.DateTime = fi.LastWriteTime; // Note the zip format stores 2 second granularity
+                ZipEntry newEntry = new ZipEntry(entryName) {DateTime = fi.LastWriteTime, Size = fi.Length};
+                // Note the zip format stores 2 second granularity
 
                 // Specifying the AESKeySize triggers AES encryption. Allowable values are 0 (off), 128 or 256.
                 // A password on the ZipOutputStream is required if using AES.
@@ -186,7 +185,6 @@ namespace FileUploader.Controllers
                 // If the file may be bigger than 4GB, or you do not need WinXP built-in compatibility, you do not need either,
                 // but the zip will be in Zip64 format which not all utilities can understand.
                 //   zipStream.UseZip64 = UseZip64.Off;
-                newEntry.Size = fi.Length;
 
                 zipStream.PutNextEntry(newEntry);
 
@@ -209,27 +207,25 @@ namespace FileUploader.Controllers
         private static string SaveSharedFile(int userAlertId, HttpPostedFileBase file)
         {
             string fileName = null;
-            fileName = System.IO.Path.GetFileName(file.FileName);
-            if (fileName != "")
+            fileName = Path.GetFileName(file.FileName);
+            if (fileName == "") return fileName;
+            const int BufferSize = 65536; // 65536 = 64 Kilobytes
+            string Filepath = userAlertId.ToString();
+            using (FileStream fs = System.IO.File.Create(Filepath))
             {
-                const int BufferSize = 65536; // 65536 = 64 Kilobytes
-                string Filepath = userAlertId.ToString();
-                using (FileStream fs = System.IO.File.Create(Filepath))
+                using (Stream reader = System.Web.HttpContext.Current.Request.GetBufferlessInputStream())
                 {
-                    using (Stream reader = System.Web.HttpContext.Current.Request.GetBufferlessInputStream())
+                    byte[] buffer = new byte[BufferSize];
+                    int read = -1, pos = 0;
+                    do
                     {
-                        byte[] buffer = new byte[BufferSize];
-                        int read = -1, pos = 0;
-                        do
-                        {
-                            int len = (file.ContentLength < pos + BufferSize ?
-                                file.ContentLength - pos :
-                                BufferSize);
-                            read = reader.Read(buffer, 0, len);
-                            fs.Write(buffer, 0, len);
-                            pos += read;
-                        } while (read > 0);
-                    }
+                        int len = (file.ContentLength < pos + BufferSize ?
+                            file.ContentLength - pos :
+                            BufferSize);
+                        read = reader.Read(buffer, 0, len);
+                        fs.Write(buffer, 0, len);
+                        pos += read;
+                    } while (read > 0);
                 }
             }
             return fileName;
