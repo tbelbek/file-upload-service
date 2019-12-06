@@ -48,9 +48,11 @@ namespace FileUploader.Controllers
             {
                 HttpPostedFileBase file = Request.Files[fileName];
 
-                string nameAndLocation = foldername + file?.FileName;
+                var cleanFileName = file?.FileName.CleanName();
 
-                fileDbName = file?.FileName;
+                string nameAndLocation = foldername + cleanFileName;
+
+                fileDbName = cleanFileName;
 
                 file?.SaveAs(nameAndLocation);
 
@@ -169,7 +171,7 @@ namespace FileUploader.Controllers
 
             foreach (string filename in files)
             {
-                FileInfo fi = new FileInfo(Regex.Replace(filename, @"[^\u0000-\u007F]+", "_"));
+                FileInfo fi = new FileInfo(filename);
 
                 string entryName = filename.Substring(folderOffset); // Makes the name in zip based on the folder
                 entryName = ZipEntry.CleanName(entryName); // Removes drive from name and fixes slash direction
@@ -243,6 +245,14 @@ namespace FileUploader.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+    }
+
+    public static class StringExtensions
+    {
+        public static string CleanName(this string str)
+        {
+            return Regex.Replace(str, @"[^\u0000-\u007F]+", "_");
         }
     }
 }
