@@ -30,7 +30,7 @@ steps:
     extraProperties: |
       # Additional properties that will be passed to the scanner, 
       # Put one key=value per line, example:
-      sonar.exclusions=SinglePageWebsite/Content/**,SinglePageWebsite/Scripts/**
+      sonar.exclusions=FileUploader/Content/**,FileUploader/Scripts/**
 
 - task: VSBuild@1
   inputs:
