@@ -25,8 +25,8 @@ steps:
   inputs:
     SonarQube: 'Sonarqube'
     scannerMode: 'MSBuild'
-    projectKey: 'uploader-with-mvc'
-    projectName: 'uploader-with-mvc'    
+    projectKey: 'file-uploader'
+    projectName: 'file-uploader'    
     extraProperties: |
       # Additional properties that will be passed to the scanner, 
       # Put one key=value per line, example:
