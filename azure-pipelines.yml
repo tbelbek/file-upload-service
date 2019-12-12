@@ -21,12 +21,25 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'Sonarqube'
+    scannerMode: 'MSBuild'
+    projectKey: 'file-uploader'
+    projectName: 'file-uploader'    
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      sonar.exclusions=FileUploader/Content/**,FileUploader/Scripts/**
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: SonarQubeAnalyze@4
 
 # - task: VSTest@2
 #   inputs:
