@@ -23,8 +23,8 @@ namespace FileUploader.Controllers
             {
                 DbContext = new FileUploaderContext();
             }
-
         }
+
         public ActionResult Index()
         {
             return View();
@@ -122,6 +122,7 @@ namespace FileUploader.Controllers
 
         public FileResult GetFile(string fileId)
         {
+            fileId = fileId.ToUpper();
             var fileUrlId = Bijective.Decode(fileId, AlphabetTest.Base16);
             var obj = DbContext.Files.FirstOrDefault(t => t.HashVal.EndsWith(fileUrlId.ToString()));
             var bytes = GetFileData(obj?.FilePath);
